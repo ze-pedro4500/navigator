@@ -22,10 +22,14 @@ export class AppComponent implements OnInit {
     height:any;
     french = false;
     SERVER_URL='./includes.signup.php'
-    
+    submitted=false;
     form: FormGroup;
-
+    codes: string;
+    repetido=false;
+    notchecked=false;
+    
     ngOnInit(){
+      
       this.form = this.formBuilder.group({
         nome: ['',Validators.required],
         email: ['',Validators.required],
@@ -39,19 +43,100 @@ export class AppComponent implements OnInit {
     get f(){
       return this.form.controls;
     }
-  
+
+     retira_acentos(str) 
+{
+
+    let com_acento = "ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÑÒÓÔÕÖØÙÚÛÜÝŔÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿŕ";
+
+let sem_acento = "AAAAAAACEEEEIIIIDNOOOOOOUUUUYRsBaaaaaaaceeeeiiiionoooooouuuuybyr";
+    let novastr="";
+    for(let i=0; i<str.length; i++) {
+        let troca=false;
+        for (let a=0; a<com_acento.length; a++) {
+            if (str.substr(i,1)==com_acento.substr(a,1)) {
+                novastr+=sem_acento.substr(a,1);
+                troca=true;
+                break;
+            }
+        }
+        if (troca==false) {
+            novastr+=str.substr(i,1);
+        }
+    }
+    return novastr;
+}       
+
+    decodeCodes(codes:string){
+      let codeArray= [];
+      let index=0;
+      let number= "";
+      let virgulas=0;
+      let v=0;
+      for(let i=0;i<codes.length;i++){
+        if(codes.charAt(i)!='"'){
+          if(virgulas===3){
+            number=number+codes.charAt(i);
+          }
+        }
+        
+        
+        if(codes.charAt(i)==='"'){
+          virgulas=virgulas+1;
+        }
+        if(virgulas===4){
+          codeArray.push(number);
+          virgulas=0;
+          number = "";
+        }
+        
+      }
+      
+      return codeArray;}
+    
 
 
      delay(ms: number) {
       return new Promise( resolve => setTimeout(resolve, ms) );
   }
+
+
     async submeter(){
+      this.repetido=false;
+      this.http.get('./includes/getcodes.php',{responseType: 'text'}).subscribe(res => this.codes=res);
+      await this.delay(1000);
+      let codeArray=this.decodeCodes(this.codes);
+      this.delay(1000);
+      for(let i=0;i<codeArray.length;i++){
+        console.log(this.form.value['ReamCode']);
+        console.log(codeArray[i]);
+        if(this.form.value['ReamCode']===parseInt(codeArray[i])){
+          this.repetido=true;
+    await this.delay(4000);
+    this.repetido=false;
+          return;
+        }
+      }
+      var element = <HTMLInputElement> document.getElementById("check");
+var isChecked = element.checked;
+if(!isChecked){
+  this.notchecked=true;
+  await this.delay(4000);
+  this.notchecked=false;
+  return;
+}
+      this.submitted=true;
+      if(this.form.invalid){
+        return;
+      }
       this.submit=true;
       await this.delay(1000);
       scrollTo(0,this.scrollto);
       let header = new HttpHeaders();
-      this.http.post<any>('./includes/signup.php', { nome: this.form.value['nome'],email: this.form.value['email'],loja:this.form.value['loja'],data: this.form.value['data'], ReamCode: this.form.value['ReamCode'],pais: this.form.value['pais'] }, {headers : new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })}).subscribe(data => {
-    })
+      this.http.post<any>('./includes/signup.php', { nome: this.retira_acentos(this.form.value['nome']),email: this.form.value['email'],loja:this.form.value['loja'],data: this.form.value['data'], ReamCode: this.form.value['ReamCode'],pais: this.form.value['pais'] }, {headers : new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' })}).subscribe(data => {
+    });
+    this.form.reset();
+    this.submitted=false;
 }
 
   @HostListener('window:scroll', [])

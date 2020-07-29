@@ -7,6 +7,17 @@
     font-family: gotham;
 }
 
+.formitem {
+    display: flex;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+#nome:-internal-autofill-selected{
+    background-color: white;
+}
 
 button {
     background-color: white;

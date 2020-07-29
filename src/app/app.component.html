@@ -11,8 +11,8 @@
       <div class="col-8">
       </div>
       <div id="lang" class="col-1 lang">
-        <select [(ngModel)]="french">
-          <option [ngValue]="false">HL</option>
+        <select style="background-color: #2ea3e1;color: white;border: none;" [(ngModel)]="french">
+          <option [ngValue]="false">NL</option>
           <option [ngValue]="true">FR</option>
         </select>
       </div>
@@ -30,7 +30,8 @@
   <div id="stripe2"></div>
   <div class="imgtxt">
     <div id="imgresma">
-    <img id="resma" src="../assets/Imagens_Holandes/resma.png">
+    <img *ngIf="!french" id="resma" src="../assets/Imagens_Holandes/resma.png">
+    <img *ngIf="french" id="resma" src="../assets/Imagens_Frances/resma.png">
     </div>
     <div id="txtresma">
       <div id="txtinner">
@@ -59,53 +60,62 @@
   <div id="butcont">
     <div id="b1box" class="imgbox" >
       <div id="b1b" class="imgbox">
-      <img class="bs"  src="../assets/botao_1_metade_1.png">
-      <img class = "bs" src="../assets/botao_1_metade_2.png">
+      <img *ngIf="!french" class="bs"  src="../assets/botao_1_metade_1.png">
+      <img *ngIf="french" class="bs"  src="../assets/Imagens_Frances/botao_1_metade_1.png">
+      <img *ngIf="!french" class = "bs" src="../assets/botao_1_metade_2.png">
+      <img *ngIf="french" class = "bs" src="../assets/Imagens_Frances/botao_1_metade_2.png">
     </div>
     </div>
     <div style="width: 1%;">
 
     </div>
     <div id="b1box" class="imgbox" >
-      <img class="bs"  src="../assets/botao_2.png">
+      <img *ngIf="!french" class="bs"  src="../assets/botao_2.png">
+      <img *ngIf="french" class="bs"  src="../assets/Imagens_Frances/botao_2.png">
     </div>
   </div>
   <div id="stripe3"></div>
   <div id="win">
-    <h1 id="winan" style="color: black;">WIN AN IPHONE X</h1>
+    <h1 *ngIf=!french id="winan" style="color: black;">WIN EEN IPHONE X</h1>
+    <h1 *ngIf=french id="winan" style="color: black;">GAGNEZ UN IPHONE X</h1>
   </div>
   <div>
-    <form [formGroup]="form"  *ngIf="!french" id="form"  (ngSubmit)="submeter()" >
-      <input id="nome"  type="text" name="nome" placeholder="Naam" formControlName="nome">
-      <br>
-      <input id="email" type="text" name="email" placeholder="E-mail" formControlName="email">
-      <br>
-      <input id="loja" type="text" name="loja" placeholder="Winkel" formControlName="loja">
-      <input id="data" type="text" onfocus="(this.type='date')" name="data" formControlName="data" placeholder="Datum van aankoop">
-      <br>
-      <input id="loja" type="number" name="ReamCode" placeholder="Code" formControlName="ReamCode">
-      <input id="data" type="text" name="pais" placeholder="Land" formControlName="pais">
-      <br>
-      <button style=" border-width: 2px;margin-top:35px" type="submit" value="submit" name="submit">DELEN </button>
+    <form [formGroup]="form" autocomplete="off"  *ngIf="!french" id="form"  (ngSubmit)="submeter()" >
+      <input autocomplete="no" id="nome"  type="text" name="nome" placeholder="Naam" formControlName="nome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nome.errors}">
+      <input style="width: 96%;" id="email" type="text" name="email" placeholder="E-mail" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors}">
+      <div class="formitem">
+      <input id="loja" type="text" name="loja" placeholder="Winkel" formControlName="loja" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.loja.errors}">
+      <input id="data" type="text" onfocus="(this.type='date')" name="data" formControlName="data" placeholder="Datum van aankoop" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.data.errors}">
+      </div>
+      <div class="formitem">
+      <input id="loja" type="number" name="ReamCode" placeholder="Code" formControlName="ReamCode" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ReamCode.errors}">
+      <input id="data" type="text" name="pais" placeholder="Land" formControlName="pais" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.pais.errors}">
+    </div>
+    <div *ngIf="repetido" style="color: red;" id="repetido">Código já usado</div>
+    <div *ngIf="notchecked" style="color: red;" id="repetido">Tem de aceitar os termos e condições</div>
+      <button style=" border-width: 2px;margin-top:35px" type="submit" value="submit" name="submit">INZENDEN </button>
       </form>
       <!--FR-->
-      <form *ngIf="french" id="form"  action = "includes/signup.php" method="POST">
-        <input id="nome" type="text" name="nome" placeholder="Nom">
-        <br>
-        <input id="email" type="text" name="email" placeholder="Courrier électronique ">
-        <br>
-        <input id="loja" type="text" name="loja" placeholder="Magasin">
-        <input id="data" type="text" onfocus="(this.type='date')" name="data" placeholder="Date d'achat">
-        <br>
-        <input id="loja" type="number" name="ReamCode" placeholder="Code">
-        <input id="data" type="text" name="pais" placeholder="Pays">
-        <br>
-        <button (click)="submeter()" style=" border-width: 2px;margin-top:35px" type="button" name="submit">PARTAGER</button>
+      <form [formGroup]="form" autocomplete="off"  *ngIf="french" id="form"  (ngSubmit)="submeter()" >
+        <input autocomplete="no" id="nome"  type="text" name="nome" placeholder="Naam" formControlName="nome" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.nome.errors}">
+        <input style="width: 96%;" id="email" type="text" name="email" placeholder="E-mail" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors}">
+        <div class="formitem">
+        <input id="loja" type="text" name="loja" placeholder="Winkel" formControlName="loja" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.loja.errors}">
+        <input id="data" type="text" onfocus="(this.type='date')" name="data" formControlName="data" placeholder="Datum van aankoop" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.data.errors}">
+        </div>
+        <div class="formitem">
+        <input id="loja" type="number" name="ReamCode" placeholder="Code" formControlName="ReamCode" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.ReamCode.errors}">
+        <input id="data" type="text" name="pais" placeholder="Land" formControlName="pais" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.pais.errors}">
+        <div *ngIf="repetido" style="color: red;" id="repetido">Código já usado</div>
+        <div *ngIf="notchecked" style="color: red;" id="repetido">Tem de aceitar os termos e condições</div>
+      </div>
+        <button style=" border-width: 2px;margin-top:35px" type="submit" value="submit" name="submit">INZENDEN </button>
         </form>
       <div>
         <div id="terms">
       <input type="checkbox" id="check" name="check" value="accept" >
-      <label style="margin-left: 5px;" for="vehicle1"> I have read, understood and acept the rules and regulations</label>
+      <label *ngIf="!french" style="margin-left: 5px;" for="vehicle1"> Ik heb de voorwaarden gelezen, begrepen en geaccepteerd.</label>
+      <label *ngIf="french" style="margin-left: 5px;" for="vehicle1"> J'ai lu, compris et accepté les termes et conditions.</label>
       </div>
     </div>
   </div>
