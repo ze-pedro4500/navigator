@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+    direction: ltr;
+    background-color: #2ea3e1;
+}
+  
+@media screen and (max-width: 499px){
+  body{
+    background-color: #229ae3;
+  } 
+}
+
+@media screen and (max-width: 601px){
+  body{
+    background-color: #229ae3;
+  } 
+}
+
+@media screen and (max-width: 750px){
+  body{
+    background-color: #229ae3;
+  } 
+}
